@@ -3,6 +3,7 @@ import './App.css'
 import DiagnosisCard from './components/DiagnosisCard'
 import RepairCard from './components/RepairCard'
 import ChallengeCard from './components/ChallengeCard'
+import { diagnoseThought } from './services/ai'
 
 const examples = [
   'I think seasons happen because Earth gets closer to the Sun.',
@@ -26,19 +27,39 @@ function App() {
   const [thought, setThought] = useState('')
   const [status, setStatus] = useState('idle')
   const [stage, setStage] = useState('diagnosis')
+  const [activeDiagnosis, setActiveDiagnosis] = useState(diagnosis)
+  const [error, setError] = useState('')
   const isComplete = status === 'complete'
 
   const handleSubmit = (event) => {
     event.preventDefault()
     if (!thought.trim()) return
     setStatus('loading')
-    window.setTimeout(() => setStatus('complete'), 650)
+    setError('')
+    diagnoseThought(thought)
+      .then((result) => {
+        setActiveDiagnosis({
+          title: result.misconception || 'A reasoning pattern to revisit',
+          summary: result.repair,
+          signal: result.misconceptionType || 'Reasoning gap',
+          reasoningGap: result.reasoningGap,
+          repair: { explanation: result.repair, steps: result.repairSteps },
+          challengeQuestion: result.challengeQuestion,
+        })
+        setStage('diagnosis')
+        setStatus('complete')
+      })
+      .catch((requestError) => {
+        setError(requestError.message)
+        setStatus('idle')
+      })
   }
 
   const chooseExample = (example) => {
     setThought(example)
     setStatus('idle')
     setStage('diagnosis')
+    setError('')
   }
 
   return (
@@ -62,6 +83,7 @@ function App() {
             <label htmlFor="thought">What are you wondering about?</label>
             <textarea id="thought" value={thought} maxLength="280" onChange={(event) => { setThought(event.target.value); setStatus('idle') }} placeholder="I think that..." />
             <div className="form-footer"><span className="helper">{thought.length}/280</span><button className="diagnose-button" type="submit" disabled={!thought.trim() || status === 'loading'}>{status === 'loading' ? 'Looking closer...' : 'Diagnose thought'} <span>→</span></button></div>
+            {error && <p className="request-error" role="alert">{error}</p>}
           </form>
           <div className="examples"><span className="helper">Try an example</span>{examples.map((example) => <button type="button" key={example} onClick={() => chooseExample(example)}>{example}</button>)}</div>
         </div>
@@ -69,9 +91,9 @@ function App() {
         <div className={`result-column ${isComplete ? 'is-complete' : ''}`} aria-live="polite">
           <div className="section-label"><span>02</span> Your clinic note</div>
           {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <div className="cards-stack">
-            {stage === 'diagnosis' && <DiagnosisCard diagnosis={diagnosis} onRepair={() => setStage('repair')} />}
-            {stage === 'repair' && <RepairCard repair={diagnosis.repair} onChallenge={() => setStage('challenge')} />}
-            {stage === 'challenge' && <ChallengeCard question={diagnosis.challengeQuestion} />}
+            {stage === 'diagnosis' && <DiagnosisCard diagnosis={activeDiagnosis} onRepair={() => setStage('repair')} />}
+            {stage === 'repair' && <RepairCard repair={activeDiagnosis.repair} onChallenge={() => setStage('challenge')} />}
+            {stage === 'challenge' && <ChallengeCard question={activeDiagnosis.challengeQuestion} />}
           </div>}
         </div>
       </section>

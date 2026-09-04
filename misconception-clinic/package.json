@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "node server/ai-server.js",
+    "test:gemini": "node scripts/test-gemini.js",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
