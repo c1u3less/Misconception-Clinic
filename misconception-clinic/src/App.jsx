@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import './App.css'
+import DiagnosisCard from './components/DiagnosisCard'
+import RepairCard from './components/RepairCard'
+import ChallengeCard from './components/ChallengeCard'
 
 const examples = [
   'I think seasons happen because Earth gets closer to the Sun.',
@@ -11,11 +14,18 @@ const diagnosis = {
   title: 'Distance is not the culprit',
   summary: 'Earth’s orbit is nearly circular. The seasons come from the tilt of Earth’s axis, which changes the angle and length of sunlight in each hemisphere.',
   signal: 'Cause and effect mix-up',
+  reasoningGap: 'You connected two ideas that often travel together, but are not the same cause.',
+  repair: {
+    explanation: 'The seasons are not caused by Earth moving dramatically closer to the Sun. They come from the tilt of Earth’s axis, which changes how directly sunlight reaches each hemisphere.',
+    steps: ['Earth’s axis is tilted', 'Tilt changes sunlight angle', 'Sunlight angle changes heating', 'Heating creates the seasons'],
+  },
+  challengeQuestion: 'Australia has summer in December while Canada has winter. How does Earth’s tilt explain this?',
 }
 
 function App() {
   const [thought, setThought] = useState('')
   const [status, setStatus] = useState('idle')
+  const [stage, setStage] = useState('diagnosis')
   const isComplete = status === 'complete'
 
   const handleSubmit = (event) => {
@@ -28,6 +38,7 @@ function App() {
   const chooseExample = (example) => {
     setThought(example)
     setStatus('idle')
+    setStage('diagnosis')
   }
 
   return (
@@ -55,9 +66,13 @@ function App() {
           <div className="examples"><span className="helper">Try an example</span>{examples.map((example) => <button type="button" key={example} onClick={() => chooseExample(example)}>{example}</button>)}</div>
         </div>
 
-        <div className={`result-column ${isComplete ? 'is-complete' : ''}`}>
+        <div className={`result-column ${isComplete ? 'is-complete' : ''}`} aria-live="polite">
           <div className="section-label"><span>02</span> Your clinic note</div>
-          {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <article className="diagnosis-note"><div className="note-topline"><span className="pill">PATTERN SPOTTED</span><span>just now</span></div><h2>{diagnosis.title}</h2><p>{diagnosis.summary}</p><div className="signal"><span>!</span><div><strong>{diagnosis.signal}</strong><small>You connected two ideas that often travel together, but are not the same cause.</small></div></div><button className="next-button" type="button">Explore the repair <span>↗</span></button></article>}
+          {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <div className="cards-stack">
+            {stage === 'diagnosis' && <DiagnosisCard diagnosis={diagnosis} onRepair={() => setStage('repair')} />}
+            {stage === 'repair' && <RepairCard repair={diagnosis.repair} onChallenge={() => setStage('challenge')} />}
+            {stage === 'challenge' && <ChallengeCard question={diagnosis.challengeQuestion} />}
+          </div>}
         </div>
       </section>
 
