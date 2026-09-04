@@ -1,121 +1,68 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
 
+const examples = [
+  'I think seasons happen because Earth gets closer to the Sun.',
+  'Why does a negative number times a negative number become positive?',
+  'Plants eat food from the soil through their roots.',
+]
+
+const diagnosis = {
+  title: 'Distance is not the culprit',
+  summary: 'Earth’s orbit is nearly circular. The seasons come from the tilt of Earth’s axis, which changes the angle and length of sunlight in each hemisphere.',
+  signal: 'Cause and effect mix-up',
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [thought, setThought] = useState('')
+  const [status, setStatus] = useState('idle')
+  const isComplete = status === 'complete'
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (!thought.trim()) return
+    setStatus('loading')
+    window.setTimeout(() => setStatus('complete'), 650)
+  }
+
+  const chooseExample = (example) => {
+    setThought(example)
+    setStatus('idle')
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <main className="app-shell">
+      <nav className="topbar">
+        <a className="brand" href="/" aria-label="Misconception Clinic home"><span className="brand-mark">+</span><span>misconception<span className="brand-accent">clinic</span></span></a>
+        <div className="nav-meta"><span className="status-dot" /><span>Learning lab / 01</span><button className="avatar" type="button" aria-label="Open profile">NB</button></div>
+      </nav>
 
-      <div className="ticks"></div>
+      <header className="intro">
+        <div className="eyebrow"><span>01</span> A kinder way to be wrong</div>
+        <h1>Find the <em>knot</em><br />in your thinking.</h1>
+        <p className="intro-copy">Bring a half-formed idea, a sticky question, or a confident wrong answer. We’ll gently take it apart and rebuild it.</p>
+        <div className="intro-stamp" aria-hidden="true"><span>think</span><strong>↗</strong><span>again</span></div>
+      </header>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <section className="clinic-layout">
+        <div className="input-column">
+          <div className="section-label"><span>01</span> Your thought</div>
+          <form className="thought-form" onSubmit={handleSubmit}>
+            <label htmlFor="thought">What are you wondering about?</label>
+            <textarea id="thought" value={thought} maxLength="280" onChange={(event) => { setThought(event.target.value); setStatus('idle') }} placeholder="I think that..." />
+            <div className="form-footer"><span className="helper">{thought.length}/280</span><button className="diagnose-button" type="submit" disabled={!thought.trim() || status === 'loading'}>{status === 'loading' ? 'Looking closer...' : 'Diagnose thought'} <span>→</span></button></div>
+          </form>
+          <div className="examples"><span className="helper">Try an example</span>{examples.map((example) => <button type="button" key={example} onClick={() => chooseExample(example)}>{example}</button>)}</div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+
+        <div className={`result-column ${isComplete ? 'is-complete' : ''}`}>
+          <div className="section-label"><span>02</span> Your clinic note</div>
+          {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <article className="diagnosis-note"><div className="note-topline"><span className="pill">PATTERN SPOTTED</span><span>just now</span></div><h2>{diagnosis.title}</h2><p>{diagnosis.summary}</p><div className="signal"><span>!</span><div><strong>{diagnosis.signal}</strong><small>You connected two ideas that often travel together, but are not the same cause.</small></div></div><button className="next-button" type="button">Explore the repair <span>↗</span></button></article>}
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <footer className="footer"><span>Made for curious minds.</span><span>Misconception Clinic <b>©</b> 2026</span></footer>
+    </main>
   )
 }
 
