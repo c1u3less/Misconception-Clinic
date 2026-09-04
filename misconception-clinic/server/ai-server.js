@@ -1,9 +1,11 @@
 import { createServer } from 'node:http'
+import { existsSync } from 'node:fs'
 import { GoogleGenAI, Type } from '@google/genai'
 
-process.loadEnvFile()
+if (existsSync('.env')) process.loadEnvFile()
 
 const port = 8787
+if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY is missing. Copy .env.example to .env and add your key.')
 const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 const diagnosisSchema = {
   type: Type.OBJECT,

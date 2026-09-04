@@ -6,9 +6,9 @@ import ChallengeCard from './components/ChallengeCard'
 import { diagnoseThought } from './services/ai'
 
 const examples = [
-  'I think seasons happen because Earth gets closer to the Sun.',
-  'Why does a negative number times a negative number become positive?',
-  'Plants eat food from the soil through their roots.',
+  'Does swallowing gum really make it stay for seven years?',
+  'I think we only use 10% of our brains.',
+  'Why does toast always land butter-side down?',
 ]
 
 const diagnosis = {
@@ -40,7 +40,7 @@ function App() {
       .then((result) => {
         setActiveDiagnosis({
           title: result.misconception || 'A reasoning pattern to revisit',
-          summary: result.repair,
+          summary: result.understands ? `${result.understands} ${result.repair}` : result.repair,
           signal: result.misconceptionType || 'Reasoning gap',
           reasoningGap: result.reasoningGap,
           repair: { explanation: result.repair, steps: result.repairSteps },
@@ -66,30 +66,30 @@ function App() {
     <main className="app-shell">
       <nav className="topbar">
         <a className="brand" href="/" aria-label="Misconception Clinic home"><span className="brand-mark">+</span><span>misconception<span className="brand-accent">clinic</span></span></a>
-        <div className="nav-meta"><span className="status-dot" /><span>Learning lab / 01</span><button className="avatar" type="button" aria-label="Open profile">NB</button></div>
+        <div className="nav-meta"><span className="status-dot" /><span>Curiosity playground / 01</span><button className="avatar" type="button" aria-label="Open profile">NB</button></div>
       </nav>
 
       <header className="intro">
-        <div className="eyebrow"><span>01</span> A kinder way to be wrong</div>
-        <h1>Find the <em>knot</em><br />in your thinking.</h1>
-        <p className="intro-copy">Bring a half-formed idea, a sticky question, or a confident wrong answer. We’ll gently take it apart and rebuild it.</p>
-        <div className="intro-stamp" aria-hidden="true"><span>think</span><strong>↗</strong><span>again</span></div>
+        <div className="eyebrow"><span>01</span> No silly questions allowed</div>
+        <h1>Drop your random<br /><em>late-night thoughts.</em></h1>
+        <p className="intro-copy">Bring the hot take, half-baked theory, or “wait... how does that work?” moment. We’ll untangle it together.</p>
+        <div className="intro-stamp" aria-hidden="true"><span>ask</span><strong>↗</strong><span>away</span></div>
       </header>
 
       <section className="clinic-layout">
         <div className="input-column">
-          <div className="section-label"><span>01</span> Your thought</div>
+          <div className="section-label"><span>01</span> Drop it here</div>
           <form className="thought-form" onSubmit={handleSubmit}>
-            <label htmlFor="thought">What are you wondering about?</label>
-            <textarea id="thought" value={thought} maxLength="280" onChange={(event) => { setThought(event.target.value); setStatus('idle') }} placeholder="I think that..." />
+            <label htmlFor="thought">What weird thing is on your mind?</label>
+            <textarea id="thought" value={thought} maxLength="280" onChange={(event) => { setThought(event.target.value); setStatus('idle') }} placeholder="Okay, hear me out..." />
             <div className="form-footer"><span className="helper">{thought.length}/280</span><button className="diagnose-button" type="submit" disabled={!thought.trim() || status === 'loading'}>{status === 'loading' ? 'Looking closer...' : 'Diagnose thought'} <span>→</span></button></div>
             {error && <p className="request-error" role="alert">{error}</p>}
           </form>
-          <div className="examples"><span className="helper">Try an example</span>{examples.map((example) => <button type="button" key={example} onClick={() => chooseExample(example)}>{example}</button>)}</div>
+          <div className="examples"><span className="helper">Pick a curious myth</span>{examples.map((example) => <button type="button" key={example} onClick={() => chooseExample(example)}>{example}</button>)}</div>
         </div>
 
         <div className={`result-column ${isComplete ? 'is-complete' : ''}`} aria-live="polite">
-          <div className="section-label"><span>02</span> Your clinic note</div>
+          <div className="section-label"><span>02</span> Your aha moment</div>
           {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <div className="cards-stack">
             {stage === 'diagnosis' && <DiagnosisCard diagnosis={activeDiagnosis} onRepair={() => setStage('repair')} />}
             {stage === 'repair' && <RepairCard repair={activeDiagnosis.repair} onChallenge={() => setStage('challenge')} />}
