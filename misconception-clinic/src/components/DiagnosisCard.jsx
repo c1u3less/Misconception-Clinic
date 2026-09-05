@@ -1,7 +1,7 @@
 function DiagnosisCard({ diagnosis, onRepair }) {
 	return (
 		<article className="clinic-card diagnosis-card">
-			<div className="note-topline"><span className="pill">PATTERN SPOTTED</span><span>just now</span></div>
+			<div className="note-topline"><span className="pill">Here is the snag</span><span>just now</span></div>
 			<h2>{diagnosis.title}</h2>
 			<p>{diagnosis.summary}</p>
 			<div className="signal">

@@ -1,7 +1,7 @@
 function RepairCard({ repair, onChallenge }) {
 	return (
 		<article className="clinic-card repair-card">
-			<div className="card-kicker"><span>03</span> The repair</div>
+			<div className="card-kicker">The repair</div>
 			<h2>Build a better<br />mental model.</h2>
 			<p>{repair.explanation}</p>
 			<div className="repair-steps">

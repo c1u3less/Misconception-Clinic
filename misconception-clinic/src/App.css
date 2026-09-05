@@ -3,16 +3,16 @@
 :root {
   --background: #f4f6f1;
   --text: #17221d;
-  --accent: #d95745;
+  --accent: #a83b2f;
   --secondary: #b9a7e8;
   --divider: #cbd4cc;
-  --error: #b23a48;
+  --error: #9e2f3d;
   --display: 'Playfair Display', Georgia, serif;
   --body: 'Inter', Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
-body { min-width: 320px; margin: 0; background: var(--background); color: var(--text); font-family: var(--body); }
+body { min-width: 320px; margin: 0; background-color: var(--background); background-image: radial-gradient(var(--divider) .7px, transparent .7px); background-size: 24px 24px; color: var(--text); font-family: var(--body); }
 button, textarea { font: inherit; }
 button { color: inherit; cursor: pointer; }
 .app-shell { width: min(1320px, 100%); min-height: 100vh; margin: 0 auto; padding: 0 clamp(20px, 6vw, 88px); }
@@ -24,42 +24,43 @@ button { color: inherit; cursor: pointer; }
 .info-button, .modal-close { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--text); border-radius: 50%; background: transparent; }
 .info-button svg { width: 18px; height: 18px; fill: none; stroke: var(--text); stroke-linecap: round; stroke-width: 1.6; }
 .intro { position: relative; padding: clamp(76px, 10vw, 128px) 0 clamp(70px, 9vw, 108px); border-bottom: 1px solid var(--divider); }
-.eyebrow, .section-label, .modal-kicker { color: var(--text); font-size: 11px; font-weight: 600; letter-spacing: .03em; }
+.eyebrow, .section-label, .modal-kicker { color: var(--text); font-size: clamp(.72rem, .68rem + .12vw, .82rem); font-weight: 600; letter-spacing: .03em; }
 .intro h1 { max-width: 900px; margin: 22px 0 22px; font: 600 clamp(48px, 8vw, 108px)/.98 var(--display); letter-spacing: -.055em; }
-.intro-copy { max-width: 470px; margin: 0; color: var(--text); font-size: 16px; line-height: 1.65; }
-.intro-stamp { position: absolute; right: 7%; bottom: 72px; display: grid; width: 124px; height: 124px; place-content: center; justify-items: center; gap: 2px; border: 1px solid var(--text); border-radius: 50%; background: var(--secondary); box-shadow: 6px 6px 0 var(--text); font-size: 11px; text-transform: uppercase; transform: rotate(8deg); }
-.intro-stamp strong { color: var(--accent); font: 26px var(--display); }
+.intro-copy { max-width: 470px; margin: 0; color: var(--text); font-size: clamp(1rem, .94rem + .3vw, 1.18rem); line-height: 1.65; }
+.intro-stamp { position: absolute; right: 7%; bottom: 72px; display: flex; width: auto; min-width: 8.5rem; height: 3.25rem; align-items: center; justify-content: center; gap: .45rem; padding: .7rem 1rem; border: 1px solid var(--text); border-radius: .65rem; background: var(--secondary); box-shadow: 4px 4px 0 var(--text); font: 500 1rem var(--display); letter-spacing: 0; text-transform: lowercase; transform: rotate(3deg); }
+.intro-stamp strong { color: var(--accent); font: 1.35rem var(--display); line-height: 1; }
 .clinic-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 76px); }
 .input-column, .result-column { min-width: 0; padding: 42px 0 64px; }
 .result-column { padding-left: clamp(28px, 5vw, 72px); border-left: 1px solid var(--divider); }
 .thought-form { margin-top: 36px; padding: clamp(20px, 3vw, 30px); border: 1px solid var(--divider); border-radius: 16px; background: var(--background); }
-.thought-form label { display: block; margin-bottom: 10px; font-size: 18px; font-weight: 600; }
+.thought-form label { display: block; margin-bottom: 10px; font-size: clamp(1rem, .92rem + .3vw, 1.22rem); font-weight: 600; }
 .thought-form .answer-label { margin-top: 22px; }
-.thought-form textarea, .challenge-card textarea { display: block; width: 100%; min-height: 132px; padding: 16px; resize: vertical; border: 2px solid var(--divider); border-radius: 10px; outline: none; background: var(--background); color: var(--text); font-size: 15px; line-height: 1.55; }
-.thought-form textarea:focus, .challenge-card textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--secondary); }
+.thought-form textarea, .challenge-card textarea { display: block; width: 100%; min-height: 132px; padding: 16px; resize: vertical; border: 1px solid var(--divider); border-radius: 10px; outline: none; background: var(--background); color: var(--text); font-size: clamp(.95rem, .9rem + .18vw, 1.08rem); line-height: 1.55; }
+.thought-form textarea:focus, .challenge-card textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--secondary); }
 .thought-form textarea::placeholder, .challenge-card textarea::placeholder { color: var(--text); opacity: .62; }
 .form-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 14px; }
-.helper { color: var(--text); font-size: 11px; opacity: .72; }
+.helper { color: var(--text); font-size: clamp(.68rem, .64rem + .1vw, .78rem); opacity: .72; }
 .diagnose-button, .next-button { min-height: 44px; padding: 12px 18px; border: 1px solid var(--text); border-radius: 999px; background: var(--text); color: var(--background); font-size: 11px; font-weight: 700; }
 .diagnose-button:hover:not(:disabled) { background: var(--accent); }
 .diagnose-button:disabled, .next-button:disabled { cursor: not-allowed; opacity: .5; }
 .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
 .examples .helper { width: 100%; }
-.examples button { padding: 8px 12px; border: 1px solid var(--divider); border-radius: 999px; background: var(--background); color: var(--text); font-size: 12px; text-align: left; }
+.examples button { padding: 8px 12px; border: 1px solid var(--divider); border-radius: 999px; background: var(--background); color: var(--text); font-size: clamp(.72rem, .68rem + .1vw, .84rem); text-align: left; }
 .examples button:hover { border-color: var(--accent); }
 .empty-note { display: flex; min-height: 390px; flex-direction: column; align-items: flex-start; justify-content: center; }
 .note-orbit { display: grid; width: 60px; height: 60px; margin-bottom: 22px; place-items: center; border: 1px solid var(--text); border-radius: 50%; background: var(--secondary); box-shadow: 4px 4px 0 var(--text); font: 28px var(--display); }
 .empty-note h2 { margin: 0 0 16px; font: 500 32px/1.08 var(--display); }
 .empty-note p { max-width: 310px; margin: 0; font-size: 14px; line-height: 1.6; }
-.cards-stack { margin-top: 36px; }
+.cards-stack { margin-top: 36px; animation: card-reveal .55s ease-out both; }
 .clinic-card { padding: 24px; border: 1px solid var(--text); border-radius: 16px; background: var(--background); }
-.diagnosis-card { animation: card-reveal .55s ease-out both; }
-.repair-card, .challenge-card { border-color: var(--text); background: var(--secondary); }
+.diagnosis-card { border-top: 5px solid var(--accent); animation: card-reveal .55s ease-out both; }
+.repair-card { border-left: 5px solid var(--secondary); }
+.challenge-card { border-left: 5px solid var(--accent); }
 .note-topline, .card-kicker { display: flex; justify-content: space-between; color: var(--text); font-size: 10px; font-weight: 700; letter-spacing: .04em; }
 .pill { padding-bottom: 4px; border-bottom: 1px solid var(--text); }
 .card-kicker { justify-content: flex-start; }
 .clinic-card h2 { margin: 32px 0 14px; font: 500 clamp(28px, 3.4vw, 42px)/1.05 var(--display); letter-spacing: -.04em; }
-.clinic-card > p, .challenge-question { margin: 0; font-size: 15px; line-height: 1.6; }
+.clinic-card > p, .challenge-question { margin: 0; font-size: clamp(.95rem, .9rem + .18vw, 1.08rem); line-height: 1.6; }
 .signal { display: flex; gap: 12px; margin: 22px 0; padding-top: 16px; border-top: 1px solid var(--divider); }
 .signal > span { display: grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border-radius: 50%; background: var(--accent); color: var(--background); font-weight: 700; }
 .signal strong, .signal small { display: block; }
@@ -94,16 +95,17 @@ button { color: inherit; cursor: pointer; }
 .modal-close { position: absolute; top: 18px; right: 18px; width: 30px; height: 30px; border: 0; font-size: 22px; line-height: 1; }
 .modal-kicker { margin: 0 0 18px; color: var(--accent); }
 .info-modal h2 { margin: 0 38px 16px 0; font: 500 31px/1.05 var(--display); }
-.info-modal p:not(.modal-kicker) { margin: 10px 0; font-size: 14px; line-height: 1.6; }
-.info-button:focus-visible, .modal-close:focus-visible, .intro-stamp:focus-visible, .diagnose-button:focus-visible, .next-button:focus-visible, .examples button:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.info-modal p:not(.modal-kicker) { margin: 12px 0; font-size: clamp(1rem, .92rem + .25vw, 1.12rem); line-height: 1.6; }
+.info-button:focus-visible, .modal-close:focus-visible, .intro-stamp:focus-visible, .diagnose-button:focus-visible, .next-button:focus-visible, .examples button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+textarea:focus-visible { outline: none; }
 @keyframes card-reveal { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @media (max-width: 780px) {
   .topbar { height: 72px; }
   .nav-meta span { display: none; }
   .intro { padding: 64px 0 78px; }
   .intro h1 { max-width: 8em; font-size: clamp(47px, 14vw, 72px); }
-  .intro-stamp { right: 0; bottom: 32px; width: 86px; height: 86px; font-size: 9px; }
-  .intro-stamp strong { font-size: 21px; }
+  .intro-stamp { position: relative; right: auto; bottom: auto; width: fit-content; min-width: 8rem; height: clamp(2.9rem, 12vw, 3.25rem); margin: 2rem 0 0 auto; padding-inline: clamp(.8rem, 4vw, 1rem); font-size: clamp(.62rem, 2.2vw, .72rem); transform: rotate(2deg); }
+  .intro-stamp strong { font-size: clamp(1.15rem, 5vw, 1.35rem); }
   .clinic-layout { display: block; }
   .input-column, .result-column { padding: 30px 0 38px; }
   .result-column { border-top: 1px solid var(--divider); border-left: 0; }

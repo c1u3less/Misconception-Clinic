@@ -19,7 +19,7 @@ function ChallengeCard({ question, diagnosis, repair }) {
 
 	return (
 		<article className="clinic-card challenge-card">
-			<div className="card-kicker"><span>04</span> The check-up</div>
+			<div className="card-kicker">Try it once more</div>
 			<h2>Can you spot<br /><em>the difference?</em></h2>
 			<p className="challenge-question">{question}</p>
 			<form onSubmit={handleSubmit}>

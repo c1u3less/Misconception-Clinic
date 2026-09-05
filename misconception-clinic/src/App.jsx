@@ -93,7 +93,7 @@ function App() {
         <div className="eyebrow">No silly questions allowed</div>
         <h1>Drop your random<br /><em>late-night thoughts.</em></h1>
         <p className="intro-copy">Bring the hot take, half-baked theory, or “wait... how does that work?” moment. We’ll untangle it together.</p>
-        <button className="intro-stamp" type="button" onClick={focusQuestionInput} aria-label="Ask away and jump to the question input"><span>ask</span><strong>+</strong><span>away</span></button>
+        <button className="intro-stamp" type="button" onClick={focusQuestionInput} aria-label="Jump to the question field"><span>start</span><strong>+</strong><span>here</span></button>
       </header>
 
       <section className="clinic-layout">
@@ -107,12 +107,12 @@ function App() {
             <div className="form-footer"><span className="helper">{question.length + studentAnswer.length}/560</span><button className="diagnose-button" type="submit" disabled={!question.trim() || !studentAnswer.trim() || status === 'loading'}>{status === 'loading' ? 'Looking closer...' : 'Diagnose my thinking'}</button></div>
             {error && <p className="request-error" role="alert">{error}</p>}
           </form>
-          <div className="examples"><span className="helper">Pick a curious myth</span>{examples.map((example) => <button type="button" key={example.question} onClick={() => chooseExample(example)}>{example.question}</button>)}</div>
+          <div className="examples"><span className="helper">Try one of these</span>{examples.map((example) => <button type="button" key={example.question} onClick={() => chooseExample(example)}>{example.question}</button>)}</div>
         </div>
 
         <div ref={resultRef} className={`result-column ${isComplete ? 'is-complete' : ''}`} aria-live="polite">
           <div className="section-label">Your aha moment</div>
-          {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <div className="cards-stack">
+          {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <div key={stage} className="cards-stack">
             {stage === 'diagnosis' && <DiagnosisCard diagnosis={activeDiagnosis} onRepair={() => setStage('repair')} />}
             {stage === 'repair' && <RepairCard repair={activeDiagnosis.repair} onChallenge={() => setStage('challenge')} />}
             {stage === 'challenge' && <ChallengeCard question={activeDiagnosis.challengeQuestion} diagnosis={activeDiagnosis} repair={activeDiagnosis.repair} />}
@@ -121,9 +121,9 @@ function App() {
       </section>
 
       <footer className="footer">
-        <div className="footer-brand"><span className="footer-mark">+</span><div><strong>misconception<span>clinic</span></strong><small>Made for curious minds.</small></div></div>
-        <div className="footer-prompt"><span>Still wondering?</span><strong>Good. Keep going.</strong></div>
-        <div className="footer-meta"><span>playground online</span><small>© 2026 Misconception Clinic</small></div>
+        <div className="footer-brand"><span className="footer-mark">+</span><div><strong>misconception<span>clinic</span></strong><small>For questions that keep bugging you.</small></div></div>
+        <div className="footer-prompt"><span>Got another question?</span><strong>Put it down.</strong></div>
+        <div className="footer-meta"><span>© 2026 Misconception Clinic</span><small>Built for better questions</small></div>
       </footer>
       {infoOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setInfoOpen(false) }}><section className="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-title"><button className="modal-close" type="button" onClick={() => setInfoOpen(false)} aria-label="Close information">×</button><p className="modal-kicker">A quick note</p><h2 id="info-title">How this place works</h2><p>Misconception Clinic helps you find the idea underneath a wrong answer, so you can fix the thinking instead of memorising a correction.</p><p>Enter a question and your answer, get a diagnosis, then try a challenge question to prove you have got it.</p></section></div>}
     </main>
