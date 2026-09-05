@@ -22,7 +22,7 @@ Add your Gemini API key to `.env`. The key is used only by the local Node API se
 
 ## Current Flow
 
-The working prototype accepts a student thought, calls Gemini through `/api/diagnose`, and renders the returned diagnosis, repair steps, and challenge question. The challenge answer currently demonstrates the verification interaction with local feedback; AI-based challenge evaluation is the next feature to add.
+The working prototype accepts a question and student answer, calls Gemini through `/api/diagnose`, and renders the returned diagnosis, repair, and challenge question. The challenge answer is checked by Gemini through `/api/recovery-check`, completing the documented recovery arc.
 
 Useful commands:
 

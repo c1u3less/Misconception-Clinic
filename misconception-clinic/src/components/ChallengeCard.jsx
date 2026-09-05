@@ -1,12 +1,20 @@
 import { useState } from 'react'
+import { checkRecovery } from '../services/ai'
 
-function ChallengeCard({ question }) {
+function ChallengeCard({ question, diagnosis, repair }) {
 	const [answer, setAnswer] = useState('')
-	const [submitted, setSubmitted] = useState(false)
+	const [status, setStatus] = useState('idle')
+	const [feedback, setFeedback] = useState(null)
+	const [error, setError] = useState('')
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		if (answer.trim()) setSubmitted(true)
+		if (!answer.trim()) return
+		setStatus('loading')
+		setError('')
+		checkRecovery({ misconceptionType: diagnosis.misconceptionType || diagnosis.signal, misconception: diagnosis.misconception || diagnosis.title, repair: repair.explanation, challengeQuestion: question, secondAnswer: answer })
+			.then((result) => { setFeedback(result); setStatus('complete') })
+			.catch((requestError) => { setError(requestError.message); setStatus('idle') })
 	}
 
 	return (
@@ -16,9 +24,10 @@ function ChallengeCard({ question }) {
 			<p className="challenge-question">{question}</p>
 			<form onSubmit={handleSubmit}>
 				<textarea aria-label="Your challenge answer" value={answer} onChange={(event) => { setAnswer(event.target.value); setSubmitted(false) }} placeholder="Show your thinking..." />
-				<button className="next-button" type="submit" disabled={!answer.trim()}>Check my thinking <span>✓</span></button>
+				<button className="next-button" type="submit" disabled={!answer.trim() || status === 'loading'}>{status === 'loading' ? 'Checking...' : 'Check my thinking'} <span>✓</span></button>
 			</form>
-			{submitted && <div className="challenge-feedback"><strong>Good instinct.</strong><span>Your explanation shows you are looking at the underlying cause, not just memorising the answer.</span></div>}
+			{error && <div className="challenge-feedback"><strong>One sec.</strong><span>{error}</span></div>}
+			{feedback && <div className="challenge-feedback"><strong>{feedback.recovered ? 'You recovered!' : 'Still untangling it'}</strong><span>{feedback.feedback}</span></div>}
 		</article>
 	)
 }
