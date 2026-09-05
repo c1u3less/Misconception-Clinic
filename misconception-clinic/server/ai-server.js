@@ -5,8 +5,6 @@ import { GoogleGenAI, Type } from '@google/genai'
 if (existsSync('.env')) process.loadEnvFile()
 
 const port = 8787
-if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY is missing. Copy .env.example to .env and add your key.')
-const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 const diagnosisSchema = {
   type: Type.OBJECT,
   properties: {
@@ -87,6 +85,12 @@ const sendJson = (response, status, body) => {
   response.end(JSON.stringify(body))
 }
 
+const clientFor = (request) => {
+  const apiKey = request.headers['x-gemini-api-key'] || process.env.GEMINI_API_KEY
+  if (!apiKey) throw new Error('No Gemini API key configured.')
+  return new GoogleGenAI({ apiKey })
+}
+
 const server = createServer(async (request, response) => {
   if (request.method === 'GET' && request.url === '/api/health') {
     sendJson(response, 200, { ok: true, configured: Boolean(process.env.GEMINI_API_KEY) })
@@ -110,7 +114,7 @@ const server = createServer(async (request, response) => {
       return
     }
 
-    const result = await client.models.generateContent({
+    const result = await clientFor(request).models.generateContent({
       model: 'gemini-3.6-flash',
       contents: isDiagnosis ? diagnosisPromptFor(input.question.trim(), input.studentAnswer.trim()) : recoveryPromptFor(input),
       config: { responseMimeType: 'application/json', responseSchema: isDiagnosis ? diagnosisSchema : recoverySchema },
@@ -123,6 +127,10 @@ const server = createServer(async (request, response) => {
     sendJson(response, 200, parsedResult)
   } catch (error) {
     console.error(error)
+    if (error.message === 'No Gemini API key configured.') {
+      sendJson(response, 400, { error: 'Add your Gemini API key from the information button before asking for a diagnosis.' })
+      return
+    }
     sendJson(response, 500, { error: 'Gemini could not complete the diagnosis.' })
   }
 })

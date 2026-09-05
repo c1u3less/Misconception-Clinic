@@ -1,4 +1,4 @@
-function RepairCard({ repair, onChallenge }) {
+function RepairCard({ repair, onBack, onChallenge }) {
 	return (
 		<article className="clinic-card repair-card">
 			<div className="card-kicker">The repair</div>
@@ -7,7 +7,7 @@ function RepairCard({ repair, onChallenge }) {
 			<div className="repair-steps">
 				{repair.steps.map((step, index) => <div className="repair-step" key={step}><span>{String(index + 1).padStart(2, '0')}</span><strong>{step}</strong></div>)}
 			</div>
-			<button className="next-button" type="button" onClick={onChallenge}>Test my understanding</button>
+			<div className="card-actions"><button className="back-button" type="button" onClick={onBack}>Back to diagnosis</button><button className="next-button" type="button" onClick={onChallenge}>Test my understanding</button></div>
 		</article>
 	)
 }

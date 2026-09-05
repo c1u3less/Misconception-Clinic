@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { checkRecovery } from '../services/ai'
 
-function ChallengeCard({ question, diagnosis, repair }) {
+function ChallengeCard({ question, diagnosis, repair, apiKey, isDemo, onBack }) {
 	const [answer, setAnswer] = useState('')
 	const [status, setStatus] = useState('idle')
 	const [feedback, setFeedback] = useState(null)
@@ -12,7 +12,12 @@ function ChallengeCard({ question, diagnosis, repair }) {
 		if (!answer.trim()) return
 		setStatus('loading')
 		setError('')
-		checkRecovery({ misconceptionType: diagnosis.misconceptionType || diagnosis.signal, misconception: diagnosis.misconception || diagnosis.title, repair: repair.explanation, challengeQuestion: question, secondAnswer: answer })
+		if (isDemo && !apiKey) {
+			setFeedback({ recovered: true, feedback: 'This example shows the recovery step. Add your own key to check a real answer with Gemini.' })
+			setStatus('complete')
+			return
+		}
+		checkRecovery({ misconceptionType: diagnosis.misconceptionType || diagnosis.signal, misconception: diagnosis.misconception || diagnosis.title, repair: repair.explanation, challengeQuestion: question, secondAnswer: answer }, apiKey)
 			.then((result) => { setFeedback(result); setStatus('complete') })
 			.catch((requestError) => { setError(requestError.message); setStatus('idle') })
 	}
@@ -24,7 +29,7 @@ function ChallengeCard({ question, diagnosis, repair }) {
 			<p className="challenge-question">{question}</p>
 			<form onSubmit={handleSubmit}>
 				<textarea aria-label="Your challenge answer" value={answer} onChange={(event) => { setAnswer(event.target.value); setFeedback(null); setError('') }} placeholder="Show your thinking..." />
-				<button className="next-button" type="submit" disabled={!answer.trim() || status === 'loading'}>{status === 'loading' ? 'Checking...' : 'Check my thinking'} <span>✓</span></button>
+				<div className="card-actions"><button className="back-button" type="button" onClick={onBack}>Back to repair</button><button className="next-button" type="submit" disabled={!answer.trim() || status === 'loading'}>{status === 'loading' ? 'Checking...' : 'Check my thinking'} <span>✓</span></button></div>
 			</form>
 			{error && <div className="challenge-feedback"><strong>One sec.</strong><span>{error}</span></div>}
 			{feedback && <div className="challenge-feedback"><strong>{feedback.recovered ? 'You recovered!' : 'Still untangling it'}</strong><span>{feedback.feedback}</span></div>}

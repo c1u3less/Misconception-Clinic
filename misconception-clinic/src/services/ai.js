@@ -1,7 +1,10 @@
-async function postJson(path, body) {
+async function postJson(path, body, apiKey = '') {
+	const headers = { 'Content-Type': 'application/json' }
+	if (apiKey.trim()) headers['x-gemini-api-key'] = apiKey.trim()
+
 	const response = await fetch(path, {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+		headers,
 		body: JSON.stringify(body),
 	})
 
@@ -13,10 +16,10 @@ async function postJson(path, body) {
 	return payload
 }
 
-export function diagnoseThought(question, studentAnswer) {
-	return postJson('/api/diagnose', { question, studentAnswer })
+export function diagnoseThought(question, studentAnswer, apiKey) {
+	return postJson('/api/diagnose', { question, studentAnswer }, apiKey)
 }
 
-export function checkRecovery(details) {
-	return postJson('/api/recovery-check', details)
+export function checkRecovery(details, apiKey) {
+	return postJson('/api/recovery-check', details, apiKey)
 }
