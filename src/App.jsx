@@ -165,7 +165,39 @@ function App() {
   return (
     <main className="app-shell">
       <nav className="topbar">
-        <a className="brand" href="/" aria-label="Misconception Clinic home"><span className="brand-mark">+</span><span>misconception<span className="brand-accent">clinic</span></span></a>
+        <a className="brand" href="/" aria-label="Misconception Clinic home"><span className="brand-mark"><svg
+  width="32"
+  height="32"
+  viewBox="0 0 32 32"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Plus icon"
+>
+  <circle
+    cx="18"
+    cy="18"
+    r="13"
+    fill="#17221d"
+  />
+
+  <circle
+    cx="16"
+    cy="16"
+    r="13"
+    fill="#a83b2f"
+    stroke="#17221d"
+    stroke-width="1"
+  />
+
+  <path
+    d="M16 10V22M10 16H22"
+    stroke="#f4f6f1"
+    stroke-width="2.5"
+    stroke-linecap="square"
+  />
+</svg>
+
+</span><span>misconception<span className="brand-accent">clinic</span></span></a>
         <div className="nav-meta"><span>Curiosity playground</span><button className="info-button" type="button" onClick={() => setInfoOpen(true)} aria-label="About Misconception Clinic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.1" /></svg></button></div>
       </nav>
 
@@ -202,7 +234,7 @@ function App() {
 
       <footer className="footer">
         <div className="footer-brand"><span className="footer-mark">+</span><div><strong>misconception<span>clinic</span></strong><small>For questions that keep bugging you.</small></div></div>
-        <div className="footer-prompt"><span>Got another question?</span><strong>Put it down.</strong></div>
+        <div className="footer-prompt"><span>Built by</span><strong>Nabin</strong></div>
         <div className="footer-meta"><span>© 2026 Misconception Clinic</span><small>Built for better questions</small><div className="footer-links"><a href="./misconception-clinic-submission.md">Notes</a><a href="https://github.com/nabinbhatt/Misconception-Clinic" target="_blank" rel="noreferrer">GitHub</a></div></div>
       </footer>
       {savedMessage && <div className="saved-toast" role="status">{savedMessage}</div>}
@@ -220,7 +252,7 @@ function App() {
 >
   <path d="M160 352L448 64M320 64H448V192" />
 </svg>
-</a></p><form className="key-form" onSubmit={saveApiKey}><label htmlFor="api-key">Your Gemini API key</label><input id="api-key" name="api-key" type="password" defaultValue={apiKey} placeholder="Paste your key here" autoComplete="off" /><div className="key-actions"><button className="key-save" type="submit">Save key</button><button className="key-clear" type="button" onClick={() => { setApiKey(''); localStorage.removeItem('misconception-clinic-gemini-key') }}>Clear</button></div></form><div className="author-links"><span>Built by</span><a href="https://github.com/nabinbhatt/Misconception-Clinic" target="_blank" rel="noreferrer">CLUELESS on GitHub</a><a href="./misconception-clinic-submission.md">Project notes</a></div></section></div>}
+</a></p><form className="key-form" onSubmit={saveApiKey}><label htmlFor="api-key">Your Gemini API key</label><input id="api-key" name="api-key" type="password" defaultValue={apiKey} placeholder="Paste your key here" autoComplete="off" /><div className="key-actions"><button className="key-save" type="submit">Save key</button><button className="key-clear" type="button" onClick={() => { setApiKey(''); localStorage.removeItem('misconception-clinic-gemini-key') }}>Clear</button></div></form><div className="author-links"><span>Built by Nabin</span><a href="https://github.com/nabinbhatt/Misconception-Clinic" target="_blank" rel="noreferrer">GitHub repo</a><a href="./misconception-clinic-submission.md">Project notes</a></div></section></div>}
     </main>
   )
 }
