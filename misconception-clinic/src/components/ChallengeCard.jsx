@@ -23,7 +23,7 @@ function ChallengeCard({ question, diagnosis, repair }) {
 			<h2>Can you spot<br /><em>the difference?</em></h2>
 			<p className="challenge-question">{question}</p>
 			<form onSubmit={handleSubmit}>
-				<textarea aria-label="Your challenge answer" value={answer} onChange={(event) => { setAnswer(event.target.value); setSubmitted(false) }} placeholder="Show your thinking..." />
+				<textarea aria-label="Your challenge answer" value={answer} onChange={(event) => { setAnswer(event.target.value); setFeedback(null); setError('') }} placeholder="Show your thinking..." />
 				<button className="next-button" type="submit" disabled={!answer.trim() || status === 'loading'}>{status === 'loading' ? 'Checking...' : 'Check my thinking'} <span>✓</span></button>
 			</form>
 			{error && <div className="challenge-feedback"><strong>One sec.</strong><span>{error}</span></div>}

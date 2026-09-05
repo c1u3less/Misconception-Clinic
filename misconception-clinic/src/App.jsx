@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import DiagnosisCard from './components/DiagnosisCard'
 import RepairCard from './components/RepairCard'
@@ -30,7 +30,23 @@ function App() {
   const [stage, setStage] = useState('diagnosis')
   const [activeDiagnosis, setActiveDiagnosis] = useState(diagnosis)
   const [error, setError] = useState('')
+  const [infoOpen, setInfoOpen] = useState(false)
+  const questionInputRef = useRef(null)
+  const resultRef = useRef(null)
   const isComplete = status === 'complete'
+
+  useEffect(() => {
+    if (!isComplete || !window.matchMedia('(max-width: 700px)').matches) return
+
+    window.requestAnimationFrame(() => {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [isComplete])
+
+  const focusQuestionInput = () => {
+    questionInputRef.current?.focus({ preventScroll: true })
+    questionInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -70,32 +86,32 @@ function App() {
     <main className="app-shell">
       <nav className="topbar">
         <a className="brand" href="/" aria-label="Misconception Clinic home"><span className="brand-mark">+</span><span>misconception<span className="brand-accent">clinic</span></span></a>
-        <div className="nav-meta"><span className="status-dot" /><span>Curiosity playground / 01</span><button className="avatar" type="button" aria-label="Open profile">NB</button></div>
+        <div className="nav-meta"><span>Curiosity playground</span><button className="info-button" type="button" onClick={() => setInfoOpen(true)} aria-label="About Misconception Clinic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.1" /></svg></button></div>
       </nav>
 
       <header className="intro">
-        <div className="eyebrow"><span>01</span> No silly questions allowed</div>
+        <div className="eyebrow">No silly questions allowed</div>
         <h1>Drop your random<br /><em>late-night thoughts.</em></h1>
         <p className="intro-copy">Bring the hot take, half-baked theory, or “wait... how does that work?” moment. We’ll untangle it together.</p>
-        <div className="intro-stamp" aria-hidden="true"><span>ask</span><strong>↗</strong><span>away</span></div>
+        <button className="intro-stamp" type="button" onClick={focusQuestionInput} aria-label="Ask away and jump to the question input"><span>ask</span><strong>+</strong><span>away</span></button>
       </header>
 
       <section className="clinic-layout">
         <div className="input-column">
-          <div className="section-label"><span>01</span> Drop it here</div>
+          <div className="section-label">Drop it here</div>
           <form className="thought-form" onSubmit={handleSubmit}>
             <label htmlFor="question">What weird thing is on your mind?</label>
-            <textarea id="question" value={question} maxLength="280" onChange={(event) => { setQuestion(event.target.value); setStatus('idle') }} placeholder="Is it true that..." />
+            <textarea ref={questionInputRef} id="question" value={question} maxLength="280" onChange={(event) => { setQuestion(event.target.value); setStatus('idle') }} placeholder="Is it true that..." />
             <label className="answer-label" htmlFor="student-answer">What do you think the answer is?</label>
             <textarea id="student-answer" value={studentAnswer} maxLength="280" onChange={(event) => { setStudentAnswer(event.target.value); setStatus('idle') }} placeholder="Okay, hear me out..." />
-            <div className="form-footer"><span className="helper">{question.length + studentAnswer.length}/560</span><button className="diagnose-button" type="submit" disabled={!question.trim() || !studentAnswer.trim() || status === 'loading'}>{status === 'loading' ? 'Looking closer...' : 'Diagnose my thinking'} <span>→</span></button></div>
+            <div className="form-footer"><span className="helper">{question.length + studentAnswer.length}/560</span><button className="diagnose-button" type="submit" disabled={!question.trim() || !studentAnswer.trim() || status === 'loading'}>{status === 'loading' ? 'Looking closer...' : 'Diagnose my thinking'}</button></div>
             {error && <p className="request-error" role="alert">{error}</p>}
           </form>
           <div className="examples"><span className="helper">Pick a curious myth</span>{examples.map((example) => <button type="button" key={example.question} onClick={() => chooseExample(example)}>{example.question}</button>)}</div>
         </div>
 
-        <div className={`result-column ${isComplete ? 'is-complete' : ''}`} aria-live="polite">
-          <div className="section-label"><span>02</span> Your aha moment</div>
+        <div ref={resultRef} className={`result-column ${isComplete ? 'is-complete' : ''}`} aria-live="polite">
+          <div className="section-label">Your aha moment</div>
           {!isComplete ? <div className="empty-note"><div className="note-orbit"><span>?</span></div><h2>Your diagnosis<br /><em>will appear here.</em></h2><p>No judgement. Just a clearer map of what you know, what you’re assuming, and where to look next.</p></div> : <div className="cards-stack">
             {stage === 'diagnosis' && <DiagnosisCard diagnosis={activeDiagnosis} onRepair={() => setStage('repair')} />}
             {stage === 'repair' && <RepairCard repair={activeDiagnosis.repair} onChallenge={() => setStage('challenge')} />}
@@ -107,8 +123,9 @@ function App() {
       <footer className="footer">
         <div className="footer-brand"><span className="footer-mark">+</span><div><strong>misconception<span>clinic</span></strong><small>Made for curious minds.</small></div></div>
         <div className="footer-prompt"><span>Still wondering?</span><strong>Good. Keep going.</strong></div>
-        <div className="footer-meta"><span><i className="status-dot" /> playground online</span><small>© 2026 Misconception Clinic</small></div>
+        <div className="footer-meta"><span>playground online</span><small>© 2026 Misconception Clinic</small></div>
       </footer>
+      {infoOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setInfoOpen(false) }}><section className="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-title"><button className="modal-close" type="button" onClick={() => setInfoOpen(false)} aria-label="Close information">×</button><p className="modal-kicker">A quick note</p><h2 id="info-title">How this place works</h2><p>Misconception Clinic helps you find the idea underneath a wrong answer, so you can fix the thinking instead of memorising a correction.</p><p>Enter a question and your answer, get a diagnosis, then try a challenge question to prove you have got it.</p></section></div>}
     </main>
   )
 }

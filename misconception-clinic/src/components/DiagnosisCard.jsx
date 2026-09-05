@@ -8,7 +8,7 @@ function DiagnosisCard({ diagnosis, onRepair }) {
 				<span>!</span>
 				<div><strong>{diagnosis.signal}</strong><small>{diagnosis.reasoningGap}</small></div>
 			</div>
-			<button className="next-button" type="button" onClick={onRepair}>Explore the repair <span>↗</span></button>
+			<button className="next-button" type="button" onClick={onRepair}>Explore the repair</button>
 		</article>
 	)
 }
